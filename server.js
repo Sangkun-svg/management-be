@@ -57,6 +57,3 @@ app.get("/api/customers", (req, res) => {
 app.listen(9000, () => {
   console.log(`Listening server port ${port}`);
 });
-// git remote add origin git@github.com:Sangkun-svg/management-be.git
-// git branch -M master
-// git push -u origin master
