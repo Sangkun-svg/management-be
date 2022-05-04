@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import { dbConfig } from "./sequelize.js";
+import { Customers } from "./user.model.js";
 const app = express();
 
 const port = process.env.PORT || 9000;
@@ -24,36 +26,23 @@ app.use(cors(options));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/api/customers", (req, res) => {
-  console.log("get all customers");
-  return res.send([
-    {
-      id: 1,
-      image: "https://placeImg.com/64/64/1",
-      name: "Sangkun",
-      age: 23,
-      gender: "male",
-      career: "GnB",
-    },
-    {
-      id: 2,
-      image: "https://placeImg.com/64/64/2",
-      name: "Tay",
-      age: 30,
-      gender: "male",
-      career: "GnB",
-    },
-    {
-      id: 3,
-      image: "https://placeImg.com/64/64/3",
-      name: "Summer",
-      age: 32,
-      gender: "female",
-      career: "GnB",
-    },
-  ]);
+app.get("/api/customers", async (req, res) => {
+  try {
+    const customers = await Customers.findAll({ raw: true });
+    return res.send(customers);
+  } catch (err) {
+    console.error(err);
+  }
 });
 
 app.listen(9000, () => {
   console.log(`Listening server port ${port}`);
 });
+
+dbConfig
+  .sync()
+  .then(() => console.info("connected to db"))
+  .catch((e) => {
+    console.error("Errordb ", e);
+    throw "error";
+  });
