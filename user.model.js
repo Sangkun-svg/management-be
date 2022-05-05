@@ -1,7 +1,7 @@
 import * as Sequelize from "sequelize";
 import { dbConfig } from "./sequelize.js";
 
-const { INTEGER, STRING } = Sequelize;
+const { INTEGER, STRING, DATE, NOW, BOOLEAN } = Sequelize;
 export const Customers = dbConfig.define("customers", {
   id: {
     primaryKey: true,
@@ -28,5 +28,13 @@ export const Customers = dbConfig.define("customers", {
   gender: {
     allowNull: true,
     type: STRING,
+  },
+  is_deleted: {
+    defaultValue: 0,
+    type: BOOLEAN,
+  },
+  created_at: {
+    type: DATE,
+    defaultValue: NOW,
   },
 });

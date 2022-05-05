@@ -30,12 +30,48 @@ app.use("/image", express.static("./upload"));
 
 app.get("/api/customers", async (req, res) => {
   try {
-    const customers = await Customers.findAll({ raw: true });
+    const customers = await Customers.findAll({
+      raw: true,
+      where: { is_deleted: false },
+    });
     return res.send(customers);
   } catch (err) {
     console.error(err);
   }
 });
+// softDelete : DB 내 isDeleted 컬럼 값에 따라 삭제처리를 한다
+app.patch("/api/customer/delete/:id", (req, res) => {
+  try {
+    console.log("/api/customer/delete/:id");
+    const customerId = Number(req.params.id);
+    const customer = Customers.update(
+      { is_deleted: true },
+      {
+        where: [{ id: customerId }],
+      }
+    );
+    return Promise.resolve(customer);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// hardDelete : DB 내 데이터를 영구 삭제함
+// app.delete("/api/customer/delete/:id", async (req, res) => {
+//   try {
+//     const customerId = Number(req.params.id);
+//     console.log(typeof customerId, customerId);
+//     const customer = await Customers.destroy({
+//       where: [
+//         {
+//           id: customerId,
+//         },
+//       ],
+//     });
+//   } catch (err) {
+//     console.error(err);
+//   }
+// });
 
 app.post("/api/customers", upload.single("image"), async (req, res) => {
   try {
