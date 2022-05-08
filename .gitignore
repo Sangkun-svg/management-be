@@ -4,7 +4,9 @@
 /upload
 # database
 /sequelize.js
-
+# build
+/build
+/babel.config.json
 # dependencies
 /node_modules
 /.pnp
