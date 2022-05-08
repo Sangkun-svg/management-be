@@ -1,13 +1,21 @@
 import * as Sequelize from "sequelize";
-import { dbConfig } from "./sequelize.js";
+import { dbConfig } from "../../sequelize.js";
 
 const { INTEGER, STRING, DATE, NOW, BOOLEAN } = Sequelize;
 export const Customers = dbConfig.define("customers", {
-  id: {
+  no: {
     primaryKey: true,
     allowNull: false,
     autoIncrement: true,
     type: INTEGER,
+  },
+  id: {
+    allowNull: false,
+    type: STRING,
+  },
+  password: {
+    allowNull: false,
+    type: STRING,
   },
   age: {
     allowNull: true,

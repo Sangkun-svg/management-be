@@ -1,8 +1,10 @@
 import express from "express";
 import cors from "cors";
 import { dbConfig } from "./sequelize.js";
-import { Customers } from "./user.model.js";
+import { User } from "./src/models/userModel.js";
 import multer from "multer";
+
+import { userRouter } from "./src/routers/index.js";
 const app = express();
 
 const port = process.env.PORT || 9000;
@@ -27,70 +29,41 @@ app.use(cors(options));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/image", express.static("./upload"));
+// app.use("/api/user", userRouter);
 
-app.get("/api/customers", async (req, res) => {
+app.post("/api/user/register", async (req, res) => {
   try {
-    const customers = await Customers.findAll({
-      raw: true,
-      where: { is_deleted: false },
+    const user = await User.create(req.body);
+    const isRegistered = true;
+    return isRegistered;
+  } catch (error) {
+    console.error(error);
+    throw new Error("user register Error");
+  }
+});
+
+app.post("/api/user/login", async (req, res) => {
+  try {
+    let isUser = false;
+    console.log("req.body : ", req.body);
+    const { id, password } = req.body;
+    const user = await User.findOne({
+      where: {
+        id: id,
+      },
     });
-    return res.send(customers);
-  } catch (err) {
-    console.error(err);
-  }
-});
-// softDelete : DB 내 isDeleted 컬럼 값에 따라 삭제처리를 한다
-app.patch("/api/customer/delete/:id", (req, res) => {
-  try {
-    console.log("/api/customer/delete/:id");
-    const customerId = Number(req.params.id);
-    const customer = Customers.update(
-      { is_deleted: true },
-      {
-        where: [{ id: customerId }],
-      }
-    );
-    return Promise.resolve(customer);
-  } catch (err) {
-    console.error(err);
-  }
-});
-
-// hardDelete : DB 내 데이터를 영구 삭제함
-// app.delete("/api/customer/delete/:id", async (req, res) => {
-//   try {
-//     const customerId = Number(req.params.id);
-//     console.log(typeof customerId, customerId);
-//     const customer = await Customers.destroy({
-//       where: [
-//         {
-//           id: customerId,
-//         },
-//       ],
-//     });
-//   } catch (err) {
-//     console.error(err);
-//   }
-// });
-
-app.post("/api/customers", upload.single("image"), async (req, res) => {
-  try {
-    const {
-      body: { name, age, gender, career },
-      file: { filename },
-    } = req;
-    const image = "/image/" + filename;
-    const newCustomer = {
-      name: name,
-      age: age,
-      gender: gender,
-      career: career,
-      image: image,
-    };
-    const addCustomer = await Customers.create(newCustomer);
-    return;
-  } catch (err) {
-    console.error(err);
+    if (!user) {
+      res.send("존재하지 않는 아이디입니다. 다시 입력해주세요.");
+      throw new Error("존재하지 않는 아이디입니다. 다시 입력해주세요.");
+    }
+    if (user.password !== password) {
+      res.send("존재하지 않는 비밀번호입니다. 다시 입력해주세요.");
+      throw new Error("존재하지 않는 비밀번호입니다. 다시 입력해주세요.");
+    }
+    console.log(isUser);
+    return res.send("로그인 성공 !");
+  } catch (error) {
+    console.log(error);
   }
 });
 
