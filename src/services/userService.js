@@ -13,7 +13,7 @@ class UserService {
   register = async (data) => {
     const t = await dbConfig.transaction();
     try {
-      const user = await User.create(data);
+      const user = await User.create(data, { transaction: t });
       t.commit();
     } catch (error) {
       t.rollback();

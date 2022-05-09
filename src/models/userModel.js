@@ -39,7 +39,7 @@ export const User = dbConfig.define("user", {
     type: DATE,
     defaultValue: NOW,
   },
-  updatedㅑ_at: {
+  updated_at: {
     type: DATE,
     defaultValue: NOW,
   },
