@@ -1,4 +1,4 @@
-import sequelize from "sequelize";
+import sequelize, { Op, where } from "sequelize";
 import { User } from "../models/userModel.js";
 import { dbConfig } from "../../sequelize.js";
 class UserService {
@@ -11,17 +11,40 @@ class UserService {
   }
 
   register = async (data) => {
-    console.log("service register");
     const t = await dbConfig.transaction();
     try {
-      //   const validation = registerValidation(data);
-      //   const provider = ...; -> provider funciotn : if user register from social platform write provider in database ex ] provier === kakao ? provider = kakao : local
       const user = await User.create(data);
       t.commit();
     } catch (error) {
       t.rollback();
       console.error(error);
     }
+  };
+
+  validateDuplication = async (data) => {
+    try {
+      const { id, email } = data;
+      const user = await User.findOne({
+        raw: true,
+        where: {
+          [Op.or]: [{ id: id }, { email: email }],
+        },
+      });
+      const isDuplicated = user === null; // TODO: Hmm.... 이게 아닌거같은데..
+      if (!isDuplicated) {
+        throw new Error("duplicate user info");
+      }
+      return isDuplicated;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  setProvider = () => {
+    try {
+      // if complete make social login funtion then make this function
+      // each flatporm set Provider column
+    } catch (error) {}
   };
 
   login = async (address) => {
@@ -34,16 +57,15 @@ class UserService {
           id: id,
         },
       });
-      if (user.password === password) {
-        console.log("password  equals");
-        isUser = true;
-      } else {
-        console.log("password is not equals");
+      if (!user) {
+        throw new Error("id not exist , confirm plz");
       }
-      console.log("isUser : ", isUser);
+      if (user.password !== password) {
+        throw new Error("password is not equals");
+      }
       return isUser;
     } catch (error) {
-      throw new Error("login is not success");
+      console.log(error);
     }
   };
 }

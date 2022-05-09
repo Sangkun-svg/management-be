@@ -9,10 +9,11 @@ class UserController {
     return UserController.instance;
   }
 
-  register = (data) => {
-    console.log("controller register");
-    const registerUser = userService.register(data);
-    console.log(registerUser);
+  register = async (data) => {
+    const isValid = await userService.validateDuplication(data);
+    const registerUser = isValid
+      ? userService.register(data)
+      : console.log("is not valid data");
     return registerUser;
   };
 
