@@ -1,13 +1,12 @@
 import express from "express";
 import cors from "cors";
-import { dbConfig } from "./sequelize.js";
-import { User } from "./src/models/userModel.js";
+import { dbConfig } from "../sequelize.js";
 import multer from "multer";
 
-import { userRouter } from "./src/routers/index.js";
+import { userRouter } from "./routers/index.js";
+
 const app = express();
 
-const port = process.env.PORT || 9000;
 const options = {
   allowedHeaders: [
     "*",
@@ -31,10 +30,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/image", express.static("./upload"));
 app.use("/api/user", userRouter);
 
-app.listen(9000, () => {
-  console.log(`Listening server port ${port}`);
-});
-
 dbConfig
   .sync()
   .then(() => console.info("connected to db"))
@@ -42,3 +37,5 @@ dbConfig
     console.error("Errordb ", e);
     throw "error";
   });
+
+export { app };
