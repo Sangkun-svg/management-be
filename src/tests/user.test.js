@@ -6,27 +6,22 @@ import bcrypt from "bcryptjs";
 
 // describe("about user test", () => {
 
-/*
-const simpleExpect = (target, expected) => {
-  console.log(`target : ${target} & expected : ${expected}`);
-  expect(target).toContainEqual(expected);
-  const test = () => {
-    simpleExpect(no, 1);
-    simpleExpect(id, data.id);
-    simpleExpect(password, data.password);
-    simpleExpect(name, data.name);
-    simpleExpect(email, data.email);
-    simpleExpect(provider, "local");
-    simpleExpect(is_deleted, false);
-  };
+const expectToBe = (expected, toBe) => {
+  console.log(`expect(${expected}).toBe(${toBe})`);
+  expect(expected).toBe(toBe);
 };
-*/
+
 const data = {
-  id: "testId",
+  id: "SangkunId",
   password: "testPassword",
-  name: "testName",
+  name: "encryt",
   email: "testEmail@test.com",
 };
+test("bcrytojs 를 이용한 password 암호화 테스트", async () => {
+  const password = "UserPassword";
+  const encrytedPassword = await userService.encryptPassword(password);
+  expect(await bcrypt.compare(password, encrytedPassword)).toBe(true);
+});
 
 test("회원가입 테스트", async () => {
   const transaction = await dbConfig.transaction();
@@ -37,17 +32,11 @@ test("회원가입 테스트", async () => {
   });
   const { id, password, email, name, provider, is_deleted } = user;
   expect(id).toBe(data.id);
-  expect(password).toBe(data.password);
+  expect(await bcrypt.compare(data.password, password)).toBe(true);
   expect(name).toBe(data.name);
   expect(email).toBe(data.email);
   expect(provider).toBe("local");
   expect(is_deleted).toBe(Number(false));
 
   await transaction.rollback();
-});
-
-test("bcrytojs 를 이용한 password 암호화 테스트", async () => {
-  const password = "1234";
-  const encrytedPassword = await bcrypt.hash(password, 12);
-  expect(await bcrypt.compare(password, encrytedPassword)).toBe(true);
 });
