@@ -42,7 +42,7 @@ test("회원가입 테스트", async () => {
   await transaction.rollback();
 });
 
-test.only("회원가입 정보 validation 테스트", async () => {
+test("회원가입 정보 validation 테스트", async () => {
   expect(await userService.validateDuplicate(data.id)).toBe(false);
   expect(await userService.validateDuplicate("NoneExistPassword")).toBe(true);
 });
