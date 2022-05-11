@@ -2,6 +2,7 @@ import "regenerator-runtime";
 import { userService } from "../services/userService";
 import { User } from "../models/userModel";
 import { dbConfig } from "../../sequelize";
+import bcrypt from "bcryptjs";
 
 // describe("about user test", () => {
 
@@ -34,7 +35,7 @@ test("회원가입 테스트", async () => {
     raw: true,
     where: [{ id: data.id }],
   });
-  const { no, id, password, email, name, provider, is_deleted } = user;
+  const { id, password, email, name, provider, is_deleted } = user;
   expect(id).toBe(data.id);
   expect(password).toBe(data.password);
   expect(name).toBe(data.name);
@@ -44,4 +45,9 @@ test("회원가입 테스트", async () => {
 
   await transaction.rollback();
 });
-// });
+
+test("bcrytojs 를 이용한 password 암호화 테스트", async () => {
+  const password = "1234";
+  const encrytedPassword = await bcrypt.hash(password, 12);
+  expect(await bcrypt.compare(password, encrytedPassword)).toBe(true);
+});
