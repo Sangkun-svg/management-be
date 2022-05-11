@@ -1,6 +1,7 @@
 import sequelize, { Op, where } from "sequelize";
 import { User } from "../models/userModel.js";
 import { dbConfig } from "../../sequelize.js";
+import bcrypt from "bcryptjs";
 class UserService {
   static instance;
   static getInstance() {
@@ -13,30 +14,26 @@ class UserService {
   register = async (data) => {
     const t = await dbConfig.transaction();
     try {
-      const user = await User.create(data, { transaction: t });
+      const encrytedPassword = await this.encryptPassword(data.password);
+      const reqRegisterInfo = {
+        ...data,
+        password: encrytedPassword,
+      };
+      const user = await User.create(reqRegisterInfo, { transaction: t });
       t.commit();
+      return;
     } catch (error) {
       t.rollback();
-      console.error(error);
+      console.log(error);
     }
   };
 
-  validateDuplication = async (data) => {
+  encryptPassword = async (password) => {
     try {
-      const { id, email } = data;
-      const user = await User.findOne({
-        raw: true,
-        where: {
-          [Op.or]: [{ id: id }, { email: email }],
-        },
-      });
-      const isDuplicated = user === null; // TODO: Hmm.... 이게 아닌거같은데..
-      if (!isDuplicated) {
-        throw new Error("duplicate user info");
-      }
-      return isDuplicated;
+      const encrytedPassword = await bcrypt.hash(password, 12);
+      return encrytedPassword;
     } catch (error) {
-      console.log(error);
+      throw new Error("encryp pw Error : ", error);
     }
   };
 
@@ -45,28 +42,6 @@ class UserService {
       // if complete make social login funtion then make this function
       // each flatporm set Provider column
     } catch (error) {}
-  };
-
-  login = async (address) => {
-    try {
-      let isUser = false;
-      const { id, password } = address;
-      const user = await User.findOne({
-        raw: true,
-        where: {
-          id: id,
-        },
-      });
-      if (!user) {
-        throw new Error("id not exist , confirm plz");
-      }
-      if (user.password !== password) {
-        throw new Error("password is not equals");
-      }
-      return isUser;
-    } catch (error) {
-      console.log(error);
-    }
   };
 }
 
