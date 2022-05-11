@@ -2,6 +2,7 @@ import sequelize, { Op, where } from "sequelize";
 import { User } from "../models/userModel.js";
 import { dbConfig } from "../../sequelize.js";
 import bcrypt from "bcryptjs";
+import { async } from "regenerator-runtime";
 class UserService {
   static instance;
   static getInstance() {
@@ -14,6 +15,10 @@ class UserService {
   register = async (data) => {
     const t = await dbConfig.transaction();
     try {
+      const validateResult = await this.validateDuplicate(data.id);
+      if (!validateResult) {
+        throw new Error("id validate error occur");
+      }
       const encrytedPassword = await this.encryptPassword(data.password);
       const reqRegisterInfo = {
         ...data,
@@ -25,6 +30,23 @@ class UserService {
     } catch (error) {
       t.rollback();
       console.log(error);
+    }
+  };
+  validateDuplicate = async (id) => {
+    try {
+      let validateResult = true;
+      const user = await User.findOne({
+        raw: true,
+        where: {
+          id: id,
+        },
+      });
+      if (user !== null) {
+        validateResult = false;
+      }
+      return validateResult;
+    } catch (error) {
+      console.error(error);
     }
   };
 
