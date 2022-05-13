@@ -29,7 +29,7 @@ const findUser = async (userId) => {
 test("bcrytojs 를 이용한 password 암호화 테스트", async () => {
   const password = "UserPassword";
   const encrytedPassword = await userService.encryptPassword(password);
-  expect(await bcrypt.compare(password, encrytedPassword)).toEqual(true);
+  expect(await bcrypt.compare(password, encrytedPassword)).toBeTruthy();
 });
 
 test("회원가입 성공 테스트", async () => {
@@ -39,11 +39,11 @@ test("회원가입 성공 테스트", async () => {
   const user = await findUser(data.id);
   const { id, password, email, name, provider, is_deleted } = user;
   expect(id).toEqual(data.id);
-  expect(await bcrypt.compare(data.password, password)).toEqual(true);
+  expect(await bcrypt.compare(data.password, password)).toBeTruthy();
   expect(name).toEqual(data.name);
   expect(email).toEqual(data.email);
   expect(provider).toEqual("local");
-  expect(is_deleted).toEqual(Number(false));
+  expect(is_deleted).toBeFalsy();
 
   await transaction.rollback();
 });
@@ -51,24 +51,24 @@ test("회원가입 성공 테스트", async () => {
 // test("회원가입 실패 테스트", async () => {}); TODO: 설공/실패 케이스 별로 테스트 코드 작성하기
 
 test("회원가입 정보 validation 실패 테스트", async () => {
-  expect(await userService.validateDuplicate(data.id)).toEqual(false);
+  expect(await userService.validateDuplicate(data.id)).toBeFalsy();
 });
 test("회원가입 정보 validation 성공 테스트", async () => {
-  expect(await userService.validateDuplicate("NoneExistId")).toEqual(true);
+  expect(await userService.validateDuplicate("NoneExistId")).toBeTruthy();
 });
 
 test("로그인 시도 시 password 일치 테스트", async () => {
   const user = await findUser(data.id);
   expect(
     await userService.comparePassword(data.password, user.password)
-  ).toEqual(true);
+  ).toBeTruthy();
 });
 
 test("로그인 시도 시 password 불일치 테스트", async () => {
   const user = await findUser(data.id);
-  expect(await userService.comparePassword(data.password, "anyWord")).toEqual(
-    false
-  );
+  expect(
+    await userService.comparePassword(data.password, "anyWord")
+  ).toBeFalsy();
 });
 
 test("로그인 성공 테스트", async () => {
