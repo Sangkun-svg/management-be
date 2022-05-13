@@ -10,18 +10,13 @@ class UserController {
   }
 
   register = async (data) => {
-    // const isValid = await userService.validateDuplication(data);
-    // const registerUser = isValid
-    //   ? userService.register(data)
-    //   : console.log("is not valid data");
     const registerUser = await userService.register(data);
     return registerUser;
   };
 
-  login = (address) => {
-    console.log("controller login : ", address);
-    const login = userService.login(address);
-    return login;
+  login = async (address) => {
+    const result = await userService.login(address);
+    return result;
   };
 }
 

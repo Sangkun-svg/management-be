@@ -1,6 +1,7 @@
 import sequelize, { Op, where } from "sequelize";
 import { User } from "../models/userModel.js";
 import { dbConfig } from "../../sequelize.js";
+import { message } from "../constants/index.js";
 import bcrypt from "bcryptjs";
 class UserService {
   static instance;
@@ -28,7 +29,7 @@ class UserService {
       return;
     } catch (error) {
       t.rollback();
-      console.log(error);
+      console.error(error);
     }
   };
   validateDuplicate = async (id) => {
@@ -66,19 +67,28 @@ class UserService {
           id: address.id,
         },
       });
-      if (!user) {
+      if (!user)
         return {
           loginSuccess: false,
-          message: "제공된 아이디에 해당하는 유저가 없습니다.",
+          message: message.idNotEquals,
         };
-      }
+
       const isMatch = await this.comparePassword(
         address.password,
         user.password
       );
-      return isMatch;
+      if (!isMatch)
+        return {
+          loginSuccess: false,
+          message: message.passwordNotEquals,
+        };
+
+      return {
+        loginSuccess: true,
+        message: message.loginSuccessful,
+      };
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -87,7 +97,7 @@ class UserService {
       const isMatch = await bcrypt.compare(inputPassword, findPassword);
       return isMatch;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
