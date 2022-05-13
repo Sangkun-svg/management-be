@@ -14,10 +14,10 @@ const register = (req, res, next) => {
     );
 };
 
-const login = (req, res, next) => {
-  const result = userController
+const login = async (req, res, next) => {
+  const result = await userController
     .login(req.body)
-    .then((response) => res.send(response))
+    .then((response) => res.json(response))
     .catch((err) =>
       res.status(err.status || 500).send({
         statusCode: err.status || 500,
