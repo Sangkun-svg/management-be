@@ -15,7 +15,7 @@ class UserService {
   register = async (data) => {
     const t = await dbConfig.transaction();
     try {
-      const validateResult = await this.validateDuplicate(data.id);
+      const validateResult = await this.validateDuplication(data.id);
       if (!validateResult) {
         throw new Error("id validate error occur");
       }
@@ -32,7 +32,7 @@ class UserService {
       console.error(error);
     }
   };
-  validateDuplicate = async (id) => {
+  validateDuplication = async (id) => {
     try {
       let validateResult = true;
       const user = await User.findOne({

@@ -4,7 +4,6 @@ import { User } from "../models/userModel";
 import { dbConfig } from "../../sequelize";
 import bcrypt from "bcryptjs";
 import { message } from "../constants/index.js";
-// describe("about user test", () => {
 
 const expecttoEqual = (expected, toEqual) => {
   console.log(`expect(${expected}).toEqual(${toEqual})`);
@@ -32,6 +31,14 @@ test("bcrytojs 를 이용한 password 암호화 테스트", async () => {
   expect(await bcrypt.compare(password, encrytedPassword)).toEqual(true);
 });
 
+test("회원가입 정보 validation 실패 테스트", async () => {
+  expect(await userService.validateDuplication(data.id)).toEqual(false);
+});
+
+test("회원가입 정보 validation 성공 테스트", async () => {
+  expect(await userService.validateDuplication("NoneExistId")).toEqual(true);
+});
+
 test("회원가입 성공 테스트", async () => {
   const transaction = await dbConfig.transaction();
 
@@ -48,14 +55,7 @@ test("회원가입 성공 테스트", async () => {
   await transaction.rollback();
 });
 
-// test("회원가입 실패 테스트", async () => {}); TODO: 설공/실패 케이스 별로 테스트 코드 작성하기
-
-test("회원가입 정보 validation 실패 테스트", async () => {
-  expect(await userService.validateDuplicate(data.id)).toEqual(false);
-});
-test("회원가입 정보 validation 성공 테스트", async () => {
-  expect(await userService.validateDuplicate("NoneExistId")).toEqual(true);
-});
+test.only("아이디 중복으로 인한 회원가입 실패 테스트", async () => {});
 
 test("로그인 시도 시 password 일치 테스트", async () => {
   const user = await findUser(data.id);
