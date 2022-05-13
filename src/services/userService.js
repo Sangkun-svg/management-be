@@ -2,7 +2,6 @@ import sequelize, { Op, where } from "sequelize";
 import { User } from "../models/userModel.js";
 import { dbConfig } from "../../sequelize.js";
 import bcrypt from "bcryptjs";
-import { async } from "regenerator-runtime";
 class UserService {
   static instance;
   static getInstance() {
@@ -56,6 +55,39 @@ class UserService {
       return encrytedPassword;
     } catch (error) {
       throw new Error("encryp pw Error : ", error);
+    }
+  };
+
+  login = async (address) => {
+    try {
+      const user = await User.findOne({
+        raw: true,
+        where: {
+          id: address.id,
+        },
+      });
+      if (!user) {
+        return {
+          loginSuccess: false,
+          message: "제공된 아이디에 해당하는 유저가 없습니다.",
+        };
+      }
+      const isMatch = await this.comparePassword(
+        address.password,
+        user.password
+      );
+      return isMatch;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  comparePassword = async (inputPassword, findPassword) => {
+    try {
+      const isMatch = await bcrypt.compare(inputPassword, findPassword);
+      return isMatch;
+    } catch (error) {
+      console.log(error);
     }
   };
 
