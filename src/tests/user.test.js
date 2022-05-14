@@ -4,6 +4,9 @@ import { User } from "../models/userModel";
 import { dbConfig } from "../../sequelize";
 import bcrypt from "bcryptjs";
 import { message } from "../constants/index.js";
+import { jwtConfig } from "../config/jwtConfig";
+import jsonwebtoken from "jsonwebtoken";
+
 // describe("about user test", () => {
 
 const expecttoEqual = (expected, toEqual) => {
@@ -98,3 +101,5 @@ test("로그인 비밀번호 불일치 테스트", async () => {
     message: message.passwordNotEquals,
   });
 });
+
+test.only("create token & verfied token", async () => {});

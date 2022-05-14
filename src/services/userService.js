@@ -1,8 +1,10 @@
 import sequelize, { Op, where } from "sequelize";
 import { User } from "../models/userModel.js";
 import { dbConfig } from "../../sequelize.js";
+import { jwtConfig } from "../config/jwtConfig.js";
 import { message } from "../constants/index.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 class UserService {
   static instance;
   static getInstance() {
@@ -68,24 +70,27 @@ class UserService {
         },
       });
       if (!user)
+        // id is not defind
         return {
-          loginSuccess: false,
+          status: 403,
           message: message.idNotEquals,
         };
 
       const isMatch = await this.comparePassword(
+        // password is not compare
         address.password,
         user.password
       );
       if (!isMatch)
         return {
-          loginSuccess: false,
+          status: 403,
           message: message.passwordNotEquals,
         };
 
+      const token = this.signToken(user);
       return {
-        loginSuccess: true,
-        message: message.loginSuccessful,
+        status: 200,
+        token: token,
       };
     } catch (error) {
       console.error(error);
@@ -96,6 +101,22 @@ class UserService {
     try {
       const isMatch = await bcrypt.compare(inputPassword, findPassword);
       return isMatch;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  generateToken = (data) => {
+    try {
+      const token = jwt.sign(
+        {
+          no: data.no,
+          id: data.id,
+        },
+        jwtConfig.secretKey,
+        jwtConfig.option
+      );
+      return token;
     } catch (error) {
       console.error(error);
     }
