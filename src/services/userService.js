@@ -106,7 +106,7 @@ class UserService {
     }
   };
 
-  signToken = (data) => {
+  generateToken = (data) => {
     try {
       const token = jwt.sign(
         {
