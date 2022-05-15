@@ -87,10 +87,11 @@ class UserService {
           message: message.passwordNotEquals,
         };
 
-      const token = this.signToken(user);
+      const token = this.generateToken(user);
       return {
         status: 200,
         token: token,
+        name: user.name,
       };
     } catch (error) {
       console.error(error);
