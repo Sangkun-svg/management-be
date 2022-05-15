@@ -1,5 +1,6 @@
 import express from "express";
 import { userController } from "../controllers/userContorller.js";
+import jwt from "jsonwebtoken";
 export const userRouter = express();
 
 const register = (req, res, next) => {
@@ -26,5 +27,22 @@ const login = async (req, res, next) => {
     );
 };
 
-userRouter.route("/register").post(register);
+const test = (req, res, next) => {
+  console.log("test : ", req.headers);
+  console.log("test : ", req.headers.authorization);
+  const auth = req.headers.authorization;
+  if (!auth) {
+    res.status(401).json({ error: "Auth Error from authChecker" });
+  }
+  jwt.verify(auth, process.env.SECRET_KEY, (err) => {
+    if (err) {
+      res.status(401).json({ error: "Auth Error from authChecker" });
+    } else {
+      next();
+    }
+  });
+};
+
 userRouter.route("/login").post(login);
+userRouter.use(test);
+userRouter.route("/register").post(register);
