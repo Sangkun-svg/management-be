@@ -8,6 +8,8 @@
     "product": "node build/server.js",
     "dev": "NODE_ENV=development nodemon --exec babel-node src/server.js",
     "build": "npx babel src -d build",
+    "migrationsCreate": "cd src && npx sequelize migration:create --name addColumn",
+    "migrationsUp": "cd src && npx sequelize-cli db:migrate",
     "test": "NODE_ENV=test jest --detectOpenHandles --forceExit"
   },
   "author": "",
