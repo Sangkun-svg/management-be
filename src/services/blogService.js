@@ -41,7 +41,6 @@ class BlogService {
           },
         }
       );
-      console.log("deleted : ", deleted);
       return Promise.resolve(deleted);
     } catch (error) {
       console.error(error);
@@ -52,7 +51,6 @@ class BlogService {
       const poster = await Blog.findByPk(id, {
         raw: true,
       });
-      console.log("findOneByPk poster : ", poster);
       return Promise.resolve(poster);
     } catch (error) {
       console.error(error);
@@ -62,7 +60,6 @@ class BlogService {
   findAll = async (data) => {
     try {
       const posters = await Blog.findAll({ raw: true });
-      console.log("find All posters : ", posters);
       return Promise.resolve(posters);
     } catch (error) {
       console.error(error);
