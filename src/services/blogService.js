@@ -9,7 +9,7 @@ class BlogService {
     return BlogService.instance;
   }
 
-  createPost = async (data) => {
+  create = async (data) => {
     try {
       const poster = await Blog.create(data);
       return Promise.resolve(poster);
@@ -18,7 +18,7 @@ class BlogService {
     }
   };
 
-  updatePost = async (data) => {
+  update = async (data) => {
     try {
       const updated = await Blog.update(data, {
         where: {
@@ -31,7 +31,7 @@ class BlogService {
     }
   };
 
-  deletePost = async (data) => {
+  delete = async (data) => {
     try {
       const deleted = await Blog.update(
         { is_deleted: true },
@@ -47,7 +47,7 @@ class BlogService {
       console.error(error);
     }
   };
-  findOneByPosterId = async (id) => {
+  findOneByPk = async (id) => {
     try {
       const poster = await Blog.findByPk(id, {
         raw: true,
@@ -59,7 +59,7 @@ class BlogService {
     }
   };
 
-  findAllPosters = async (data) => {
+  findAll = async (data) => {
     try {
       const posters = await Blog.findAll({ raw: true });
       console.log("find All posters : ", posters);

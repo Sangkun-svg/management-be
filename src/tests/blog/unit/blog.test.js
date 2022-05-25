@@ -7,16 +7,16 @@ test("create blog test", async () => {
     writer: "Sangkun",
     content: "content",
   };
-  await blogService.createPost(data);
+  await blogService.create(data);
 });
 
 test("find blog poster by PK", async () => {
   const id = 1;
-  await blogService.findOneByPosterId(id);
+  await blogService.findOneByPk(id);
 });
 
 test("find All blog posters ", async () => {
-  await blogService.findAllPosters();
+  await blogService.findAll();
 });
 
 test("update blog posters ", async () => {
@@ -26,11 +26,11 @@ test("update blog posters ", async () => {
     writer: "Updater is SK",
     content: "Update content",
   };
-  await blogService.updatePost(data);
+  await blogService.update(data);
 });
 
 test("delete blog posters ", async () => {
   const id = 1;
-  const poster = await blogService.findOneByPosterId(id);
-  await blogService.deletePost(poster);
+  const poster = await blogService.findOneByPk(id);
+  await blogService.delete(poster);
 });
