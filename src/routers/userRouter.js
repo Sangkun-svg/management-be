@@ -1,5 +1,5 @@
 import express from "express";
-import { userController } from "../controllers";
+import { userController } from "../controllers/userContorller.js";
 import { checkAuth } from "../middlewares/auth.js";
 export const userRouter = express();
 

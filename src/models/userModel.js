@@ -1,5 +1,5 @@
 import * as Sequelize from "sequelize";
-import { dbConfig } from "../../sequelize.js";
+import { dbConfig } from "../config/sequelize.js";
 import { userConstant } from "../constants/userConstant.js";
 
 const { INTEGER, STRING, DATE, NOW, BOOLEAN } = Sequelize;

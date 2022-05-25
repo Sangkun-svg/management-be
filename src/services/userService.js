@@ -1,6 +1,6 @@
 import sequelize, { Op, where } from "sequelize";
 import { User } from "../models/userModel.js";
-import { dbConfig } from "../../sequelize.js";
+import { dbConfig } from "../config/sequelize.js";
 import { jwtConfig } from "../config/jwtConfig.js";
 import { message } from "../constants/index.js";
 import bcrypt from "bcryptjs";

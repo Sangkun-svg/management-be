@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { dbConfig } from "../sequelize.js";
+import { dbConfig } from "./config/sequelize.js";
 import multer from "multer";
 
 import { userRouter } from "./routers/index.js";
