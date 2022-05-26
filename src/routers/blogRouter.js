@@ -4,7 +4,7 @@ export const blogRouter = express();
 
 const create = (req, res, next) => {
   const result = blogController
-    .create(req)
+    .create(req.body)
     .then((response) => res.send(response))
     .catch((err) =>
       res.status(err.status || 500).send({
@@ -16,7 +16,7 @@ const create = (req, res, next) => {
 
 const update = (req, res, next) => {
   const result = blogController
-    .update(req)
+    .update(req.body)
     .then((response) => res.send(response))
     .catch((err) =>
       res.status(err.status || 500).send({
@@ -27,7 +27,7 @@ const update = (req, res, next) => {
 };
 const deletePoster = (req, res, next) => {
   const result = blogController
-    .delete(req)
+    .delete(req.params.id)
     .then((response) => res.send(response))
     .catch((err) =>
       res.status(err.status || 500).send({
@@ -47,7 +47,7 @@ const findBlog = (req, res, next) => {
       })
     );
 };
-const findAllBlogs = () => {
+const findAllBlogs = (req, res, next) => {
   const result = blogController
     .findAll()
     .then((response) => res.send(response))
@@ -60,7 +60,5 @@ const findAllBlogs = () => {
 };
 
 blogRouter.route("/create").post(create);
-blogRouter.route("/update").put(update);
-blogRouter.route("/delete").patch(deletePoster);
-blogRouter.route("/:id").get(findBlog);
 blogRouter.route("/getAll").get(findAllBlogs);
+blogRouter.route("/:id").get(findBlog).patch(deletePoster).put(update);

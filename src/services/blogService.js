@@ -31,13 +31,13 @@ class BlogService {
     }
   };
 
-  delete = async (data) => {
+  delete = async (id) => {
     try {
       const deleted = await Blog.update(
         { is_deleted: true },
         {
           where: {
-            id: data.id,
+            id: id,
           },
         }
       );
@@ -57,7 +57,7 @@ class BlogService {
     }
   };
 
-  findAll = async (data) => {
+  findAll = async () => {
     try {
       const posters = await Blog.findAll({ raw: true });
       return Promise.resolve(posters);

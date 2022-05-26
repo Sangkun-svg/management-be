@@ -14,15 +14,17 @@ class BlogController {
   update = async (data) => {
     await blogService.update(data);
   };
-  delete = async (data) => {
-    await blogService.delete(data);
+  delete = async (id) => {
+    const result = await blogService.delete(id);
+    return result;
   };
   findOneByPk = async (id) => {
     const result = await blogService.findOneByPk(id);
     return result;
   };
   findAll = async () => {
-    await blogService.findAll();
+    const result = await blogService.findAll();
+    return result;
   };
 }
 export const blogController = BlogController.getInstance();
