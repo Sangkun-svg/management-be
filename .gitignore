@@ -3,12 +3,12 @@
 # upload
 /upload
 # database
-/sequelize.js
+/config/sequelize.js
 # build
 /build
 /babel.config.json
 # config
-/config
+
 # dependencies
 /node_modules
 /.pnp
