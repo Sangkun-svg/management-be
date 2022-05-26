@@ -1,7 +1,7 @@
 import "regenerator-runtime";
 import { userService } from "../../../services/userService";
 import { User } from "../../../models/userModel";
-import { dbConfig } from "../../../../sequelize";
+import { dbConfig } from "../../../config/sequelize.js";
 import bcrypt from "bcryptjs";
 import { message } from "../../../constants/index.js";
 import { jwtConfig } from "../../../config/jwtConfig";
