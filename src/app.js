@@ -3,7 +3,7 @@ import cors from "cors";
 import { dbConfig } from "./config/sequelize.js";
 import multer from "multer";
 
-import { userRouter } from "./routers/index.js";
+import { userRouter, blogRouter } from "./routers/index.js";
 
 const app = express();
 
@@ -29,6 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/image", express.static("./upload"));
 app.use("/api/user", userRouter);
+app.use("/api/blog", blogRouter);
 
 dbConfig
   .sync()

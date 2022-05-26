@@ -1,4 +1,4 @@
-import { Blog } from "../models";
+import { Blog } from "../models/blogModel.js";
 
 class BlogService {
   static instance;

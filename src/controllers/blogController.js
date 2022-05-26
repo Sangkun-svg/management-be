@@ -1,4 +1,4 @@
-import { blogService } from "../services";
+import { blogService } from "../services/blogService.js";
 
 class BlogController {
   static instance;
@@ -18,7 +18,8 @@ class BlogController {
     await blogService.delete(data);
   };
   findOneByPk = async (id) => {
-    await blogService.findOneByPk(id);
+    const result = await blogService.findOneByPk(id);
+    return result;
   };
   findAll = async () => {
     await blogService.findAll();

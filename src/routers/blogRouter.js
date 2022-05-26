@@ -1,5 +1,5 @@
 import express from "express";
-import { blogController } from "../controllers";
+import { blogController } from "../controllers/blogController.js";
 export const blogRouter = express();
 
 const create = (req, res, next) => {
@@ -38,7 +38,7 @@ const deletePoster = (req, res, next) => {
 };
 const findBlog = (req, res, next) => {
   const result = blogController
-    .findOneByPk(req.param.id)
+    .findOneByPk(req.params.id)
     .then((response) => res.send(response))
     .catch((err) =>
       res.status(err.status || 500).send({
@@ -62,5 +62,5 @@ const findAllBlogs = () => {
 blogRouter.route("/create").post(create);
 blogRouter.route("/update").put(update);
 blogRouter.route("/delete").patch(deletePoster);
-blogRouter.route("/blog/:id").get(findBlog);
-blogRouter.route("/blogs").get(findAllBlogs);
+blogRouter.route("/:id").get(findBlog);
+blogRouter.route("/getAll").get(findAllBlogs);
