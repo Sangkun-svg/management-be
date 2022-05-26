@@ -8,6 +8,8 @@
     "product": "node build/server.js",
     "dev": "NODE_ENV=development nodemon --exec babel-node src/server.js",
     "build": "npx babel src -d build",
+    "migrationsCreate": "cd src && npx sequelize migration:create --name addColumn",
+    "migrationsUp": "cd src && npx sequelize-cli db:migrate",
     "test": "NODE_ENV=test jest --detectOpenHandles --forceExit"
   },
   "author": "",
@@ -18,6 +20,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
     "multer": "^1.4.4",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",

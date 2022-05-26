@@ -1,5 +1,5 @@
 import * as Sequelize from "sequelize";
-import { dbConfig } from "../../sequelize.js";
+import { dbConfig } from "../config/sequelize.js";
 
 const { INTEGER, STRING, DATE, NOW, BOOLEAN } = Sequelize;
 export const Customers = dbConfig.define("customers", {

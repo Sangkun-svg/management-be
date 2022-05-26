@@ -1,3 +1,3 @@
 import { userService } from "./userService";
-
-export { userService };
+import { blogService } from "./blogService";
+export { userService, blogService };

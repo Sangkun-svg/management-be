@@ -1,11 +1,11 @@
 import "regenerator-runtime";
-import { userService } from "../services/userService";
-import { User } from "../models/userModel";
-import { dbConfig } from "../../sequelize";
+import { userService } from "../../../services/userService";
+import { User } from "../../../models/userModel";
+import { dbConfig } from "../../../config/sequelize.js";
 import bcrypt from "bcryptjs";
-import { message } from "../constants/index.js";
-import { jwtConfig } from "../config/jwtConfig";
-import jsonwebtoken from "jsonwebtoken";
+import { message } from "../../../constants/index.js";
+import { jwtConfig } from "../../../config/jwtConfig";
+import jwt from "jsonwebtoken";
 
 // describe("about user test", () => {
 
@@ -41,11 +41,11 @@ test("회원가입 성공 테스트", async () => {
   await userService.register(data);
   const user = await findUser(data.id);
   const { id, password, email, name, provider, is_deleted } = user;
-  expect(id).toEqual(data.id);
+  expect(data.id).toStrictEqual(id);
   expect(await bcrypt.compare(data.password, password)).toBeTruthy();
-  expect(name).toEqual(data.name);
-  expect(email).toEqual(data.email);
-  expect(provider).toEqual("local");
+  expect(data.name).toStrictEqual(name);
+  expect(data.email).toStrictEqual(email);
+  expect("local").toStrictEqual(provider);
   expect(is_deleted).toBeFalsy();
 
   await transaction.rollback();
@@ -74,19 +74,21 @@ test("로그인 시도 시 password 불일치 테스트", async () => {
   ).toBeFalsy();
 });
 
-test("로그인 성공 테스트", async () => {
-  expect(await userService.login(data)).toEqual({
-    loginSuccess: true,
-    message: message.loginSuccessful,
-  });
-});
+// test("로그인 성공 테스트", async () => {
+//   expect(await userService.login(data)).toEqual({
+//     status: 200,
+//     token: token,
+//     name: data.name,
+//   });
+// });
+
 test("로그인 아이디 불일치 테스트", async () => {
   const reformData = {
     ...data,
     id: "unknownId",
   };
   expect(await userService.login(reformData)).toEqual({
-    loginSuccess: false,
+    status: 403,
     message: message.idNotEquals,
   });
 });
@@ -97,9 +99,9 @@ test("로그인 비밀번호 불일치 테스트", async () => {
     password: "unknownPassword",
   };
   expect(await userService.login(reformData)).toEqual({
-    loginSuccess: false,
+    status: 403,
     message: message.passwordNotEquals,
   });
 });
 
-test.only("create token & verfied token", async () => {});
+// test.only("create token & verfied token", async () => {});

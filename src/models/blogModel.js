@@ -1,35 +1,25 @@
 import * as Sequelize from "sequelize";
 import { dbConfig } from "../config/sequelize.js";
-import { userConstant } from "../constants/userConstant.js";
 
 const { INTEGER, STRING, DATE, NOW, BOOLEAN } = Sequelize;
-export const User = dbConfig.define("user", {
-  no: {
+export const Blog = dbConfig.define("blog", {
+  id: {
     primaryKey: true,
     allowNull: false,
     autoIncrement: true,
     type: INTEGER,
   },
-  id: {
+  title: {
     allowNull: false,
     type: STRING,
   },
-  password: {
+  writer: {
     allowNull: false,
     type: STRING,
   },
-  name: {
-    allowNull: true,
+  content: {
+    allowNull: false,
     type: STRING,
-  },
-  email: {
-    allowNull: true,
-    type: STRING,
-  },
-
-  provider: {
-    type: STRING,
-    defaultValue: userConstant.DEFAULT_PROVIDER,
   },
   is_deleted: {
     defaultValue: 0,

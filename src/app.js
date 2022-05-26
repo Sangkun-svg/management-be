@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
-import { dbConfig } from "../sequelize.js";
+import { dbConfig } from "./config/sequelize.js";
 import multer from "multer";
-
-import { userRouter } from "./routers/index.js";
+import morgan from "morgan";
+import { userRouter, blogRouter } from "./routers/index.js";
 
 const app = express();
 
@@ -27,8 +27,10 @@ const upload = multer({ dest: "./upload" });
 app.use(cors(options));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
 app.use("/image", express.static("./upload"));
 app.use("/api/user", userRouter);
+app.use("/api/blog", blogRouter);
 
 dbConfig
   .sync()
